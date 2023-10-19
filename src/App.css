@@ -27,9 +27,19 @@
 }
 
 .App-section {
+  display: flex;
+  padding: 5px;
   flex: 1 1 0;
   background-color: hsl(220deg 13% 13%);
   color: white;
+}
+
+.App-module {
+  margin-right: 12px;
+  box-shadow: 0px 10px 15px -3px white;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 12px;
 }
 
 .App-link {
