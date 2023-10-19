@@ -1,12 +1,22 @@
-import { useEffect, useState } from "react";
 import { SKILL_LIST } from "../consts";
+import { useEffect, useState } from "react";
 
 const useSkills = (attributes) => {
   const [skills, setSkills] = useState(SKILL_LIST);
   const [totalValue, setTotalValue] = useState(0);
 
   useEffect(() => {
-    updateSkill();
+    setSkills((prevSkills) =>
+      prevSkills.map((skill) => {
+        return {
+          ...skill,
+          value: 0,
+          total: skill.value
+            ? attributes[skill.attributeModifier.toLowerCase()] + skill.value
+            : 0,
+        };
+      })
+    );
   }, []);
 
   useEffect(() => {
@@ -39,7 +49,9 @@ const useSkills = (attributes) => {
               ...skill,
               value: newValue,
               total:
-                attributes[skill.attributeModifier.toLowerCase()] + newValue,
+                newValue > 0
+                  ? attributes[skill.attributeModifier.toLowerCase()] + newValue
+                  : newValue,
             }
           : skill
       )

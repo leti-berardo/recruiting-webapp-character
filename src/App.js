@@ -1,17 +1,16 @@
 import "./App.css";
-import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from "./consts.js";
+import { ATTRIBUTE_LIST, CLASS_LIST } from "./consts.js";
 import { useState, useEffect } from "react";
+import useAttributes from "./hooks/useAttributes";
 import useSkills from "./hooks/useSkills";
 
 function App() {
-  const [attributes, setAttributes] = useState({
-    strength: 10,
-    dexterity: 5,
-    constitution: 2,
-    intelligence: 4,
-    wisdom: 0,
-    charisma: 0,
-  });
+  const {
+    attributes,
+    increaseAttribute,
+    decreaseAttribute,
+    getAttributeValue,
+  } = useAttributes();
   const { skills, totalValue, updateSkill } = useSkills(attributes);
 
   const [classSelected, setClassSelected] = useState();
@@ -21,25 +20,9 @@ function App() {
     setSkillsPoints(10 + 4 * attributes.intelligence);
   }, [attributes.intelligence]);
 
-  const handleIncrement = (attribute) => {
-    setAttributes({
-      ...attributes,
-      [attribute.toLowerCase()]: attributes[attribute.toLowerCase()] + 1,
-    });
-  };
-
-  const handleDecrement = (attribute) => {
-    setAttributes({
-      ...attributes,
-      [attribute.toLowerCase()]: attributes[attribute.toLowerCase()] - 1,
-    });
-  };
-
   const isClassRequirementsMet = (className) => {
     return ATTRIBUTE_LIST.find((attribute) => {
-      return (
-        CLASS_LIST[className][attribute] > attributes[attribute.toLowerCase()]
-      );
+      return CLASS_LIST[className][attribute] > getAttributeValue(attribute);
     });
   };
 
@@ -63,7 +46,7 @@ function App() {
           {ATTRIBUTE_LIST.map((attribute, index) => {
             return (
               <div key={index}>
-                {attribute}:{attributes[attribute.toLowerCase()]}
+                {attribute}:{getAttributeValue(attribute)}
                 <span
                   style={{
                     marginLeft: "2px",
@@ -71,13 +54,10 @@ function App() {
                   }}
                 >
                   (Modifier:
-                  {calculateAbilityModifier(
-                    attributes[attribute.toLowerCase()]
-                  )}
-                  )
+                  {calculateAbilityModifier(getAttributeValue(attribute))})
                 </span>
-                <button onClick={() => handleIncrement(attribute)}>+</button>
-                <button onClick={() => handleDecrement(attribute)}>-</button>
+                <button onClick={() => increaseAttribute(attribute)}>+</button>
+                <button onClick={() => decreaseAttribute(attribute)}>-</button>
               </div>
             );
           })}
