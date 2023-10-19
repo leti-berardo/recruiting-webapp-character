@@ -1,51 +1,23 @@
 import { useEffect, useState } from "react";
+import { SKILL_LIST } from "../consts";
 
 const useSkills = (attributes) => {
-  const [skills, setSkills] = useState([
-    { name: "Acrobatics", attributeModifier: "Dexterity", value: 0, total: 0 },
-    {
-      name: "Animal Handling",
-      attributeModifier: "Wisdom",
-      value: 0,
-      total: 0,
-    },
-    { name: "Arcana", attributeModifier: "Intelligence", value: 0, total: 0 },
-    { name: "Athletics", attributeModifier: "Strength", value: 0, total: 0 },
-    { name: "Deception", attributeModifier: "Charisma", value: 0, total: 0 },
-    { name: "History", attributeModifier: "Intelligence", value: 0, total: 0 },
-    { name: "Insight", attributeModifier: "Wisdom", value: 0, total: 0 },
-    { name: "Intimidation", attributeModifier: "Charisma", value: 0, total: 0 },
-    {
-      name: "Investigation",
-      attributeModifier: "Intelligence",
-      value: 0,
-      total: 0,
-    },
-    { name: "Medicine", attributeModifier: "Wisdom", value: 0, total: 0 },
-    { name: "Nature", attributeModifier: "Intelligence", value: 0, total: 0 },
-    { name: "Perception", attributeModifier: "Wisdom", value: 0, total: 0 },
-    { name: "Performance", attributeModifier: "Charisma", value: 0, total: 0 },
-    { name: "Persuasion", attributeModifier: "Charisma", value: 0, total: 0 },
-    { name: "Religion", attributeModifier: "Intelligence", value: 0, total: 0 },
-    {
-      name: "Sleight of Hand",
-      attributeModifier: "Dexterity",
-      value: 0,
-      total: 0,
-    },
-    { name: "Stealth", attributeModifier: "Dexterity", value: 0, total: 0 },
-    { name: "Survival", attributeModifier: "Wisdom", value: 0, total: 0 },
-  ]);
-
+  const [skills, setSkills] = useState(SKILL_LIST);
   const [totalValue, setTotalValue] = useState(0);
+
+  useEffect(() => {
+    updateSkill();
+  }, []);
 
   useEffect(() => {
     setSkills((prevSkills) =>
       prevSkills.map((skill) => {
         return {
           ...skill,
-          total:
-            attributes[skill.attributeModifier.toLowerCase()] + skill.value,
+          value: skill.value ? skill.value : 0,
+          total: skill.value
+            ? attributes[skill.attributeModifier.toLowerCase()] + skill.value
+            : 0,
         };
       })
     );
